@@ -7,6 +7,7 @@ pip install flask
 
 ## as an option add freeit_flask and **.pyc to .gitignore
 
+
 ## 2
 # create "Hello world" Flask app
 mkdir app && cd app
@@ -24,6 +25,7 @@ flask run
 
 ## as an option """flask run &""" runs in backgound
 ## but then to stop if get PID from """ps -ef""" and run """sudo kill -9 <FLASK_PID>"""
+
 
 ## 3 add some Jinja
 # add html method to route /html path
@@ -57,3 +59,66 @@ def template():
     user = {'username': 'bear'}
     return render_template('template.html', title='Home', user=user)
 # check: open http://localhost:5000/template
+
+
+## 4 Jinja flow control directives
+# let's add if.html template
+<html>
+    <body>
+        <h1>
+          {% if user.username %}
+            Hello {{ user.username }}
+          {% else %}
+            Welcome to FreeIT server
+          {% endif %}
+        </h1>
+    </body>
+</html>
+# and 2 test routes
+@app.route('/if1')
+def if1():
+    user = {'username': 'the user'}
+    return render_template('if.html', user=user)
+
+@app.route('/if2')
+def if2():
+    return render_template('if.html', user=None)
+# check: open http://localhost:5000/if1
+# check: open http://localhost:5000/if2
+
+# it's also possible to use {% for ... %} directive
+# let's add for.html template
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Microblog</title>
+        {% else %}
+        <title>Welcome to Microblog</title>
+        {% endif %}
+    </head>
+    <body>
+        <h1>Hi, {{ user.username }}!</h1>
+        {% for post in posts %}
+        <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
+        {% endfor %}
+    </body>
+</html>
+# and for route
+app.route('/for')
+def for_route():
+    user = {'username': 'FreeIt user'}
+    posts = [
+        {
+            'author': {'username': 'John'},
+            'body': 'Beautiful day in Portland!'
+        },
+        {
+            'author': {'username': 'Susan'},
+            'body': 'The Avengers movie was so cool!'
+        },
+        {
+            'author': {'username': 'Ипполит'},
+            'body': 'Какая гадость эта ваша заливная рыба!!'
+        }
+    ]
+    return render_template('for.html', title='Home', user=user, posts=posts)
