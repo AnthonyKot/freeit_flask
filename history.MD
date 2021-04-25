@@ -27,7 +27,8 @@ flask run
 ## but then to stop if get PID from """ps -ef""" and run """sudo kill -9 <FLASK_PID>"""
 
 
-## 3 add some Jinja
+## 3
+# to add some Jinja to the project
 # add html method to route /html path
 @app.route('/html')
 def html():
@@ -83,6 +84,9 @@ def if1():
 @app.route('/if2')
 def if2():
     return render_template('if.html', user=None)
+
+## note: if you don't provide user object flask would fail
+
 # check: open http://localhost:5000/if1
 # check: open http://localhost:5000/if2
 
@@ -91,9 +95,9 @@ def if2():
 <html>
     <head>
         {% if title %}
-        <title>{{ title }} - Microblog</title>
+        <title>{{ title }} - FreeIT</title>
         {% else %}
-        <title>Welcome to Microblog</title>
+        <title>Welcome to FreeIT</title>
         {% endif %}
     </head>
     <body>
@@ -122,3 +126,47 @@ def for_route():
         }
     ]
     return render_template('for.html', title='Home', user=user, posts=posts)
+# check: open http://localhost:5000/for
+
+
+## 5
+# Jinja supports composition of templates
+# let's add app/templates/base.html template share common details
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - FreeIT</title>
+      {% else %}
+      <title>Welcome to FreeIT</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>FreeIT: <a href="/">Home</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
+# then child.html may reuse base.html to display title and navigation
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Hi, {{ user.username }}!</h1>
+    {% for post in posts %}
+    <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
+    {% endfor %}
+{% endblock %}
+# and use new route
+@app.route('/child')
+def children():
+    user = {'username': 'FreeIt user'}
+    posts = [
+        {
+            'author': {'username': 'John'},
+            'body': 'Beautiful day in Portland!'
+        },
+        {
+            'author': {'username': 'Susan'},
+            'body': 'The Avengers movie was so cool!'
+        }
+    ]
+    return render_template('child.html', title='Children', user=user, posts=posts)
