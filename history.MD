@@ -171,7 +171,69 @@ def children():
     ]
     return render_template('child.html', title='Children', user=user, posts=posts)
 
-
 ## BONUS
 ssh -R 80:localhost:5000 nokey@localhost.run
 # ssh is needed
+
+
+##  LESSON_12
+export FLASK_APP=freeit.py
+pip install flask-wtf
+pip install flask-sqlalchemy
+pip install flask-migrate
+
+flask db init
+
+Creating directory /Users/rdyto1/Projects/freeit_flask/migrations ... done
+Creating directory /Users/rdyto1/Projects/freeit_flask/migrations/versions ... done
+Generating /Users/rdyto1/Projects/freeit_flask/migrations/alembic.ini ... done
+Generating /Users/rdyto1/Projects/freeit_flask/migrations/env.py ... done
+Generating /Users/rdyto1/Projects/freeit_flask/migrations/README ... done
+Generating /Users/rdyto1/Projects/freeit_flask/migrations/script.py.mako ... done
+Please edit configuration/connection/logging settings in
+'/Users/rdyto1/Projects/freeit_flask/migrations/alembic.ini' before proceeding.
+
+## migrate => upgrade
+
+flask db migrate -m "users table"
+
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added table 'user'
+INFO  [alembic.autogenerate.compare] Detected added index 'ix_user_email' on '['email']'
+INFO  [alembic.autogenerate.compare] Detected added index 'ix_user_username' on '['username']'
+Generating /Users/rdyto1/Projects/freeit_flask/migrations/versions/e517276bb1c2_users_table.py ... done
+
+flask db upgrade
+
+## terminal
+
+>>> from app import db
+>>> from app.models import User, Post
+
+# as an option
+>>> flask shell
+
+>>> u = User(username='anton', email='anton@example.com')
+>>> db.session.add(u)
+>>> db.session.commit()
+
+>>> users = User.query.all()
+>>> users
+
+>>> p = Post(body='Anton was here', author=u)
+
+>>> posts = Post.query.all()
+>>> for p in posts:
+...     print(p.id, p.author.username, p.body)
+
+>>> User.query.order_by(User.username.desc()).all()
+
+
+## LOGIN
+
+pip install flask-login
+pip install Flask-OpenID
+pip install email_validator
+
+# NB: don't forget UserMixin
