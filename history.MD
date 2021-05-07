@@ -269,3 +269,21 @@ class User(db.Model):
 </table>
 
 {% include 'post.html' %}
+
+#commit
+
+role = db.Column(db.SmallInteger, default = 0)
+about_me = db.Column(db.String(140))
+last_seen = db.Column(db.DateTime)
+
+# migration
+
+flask db migrate -m "add more user data"
+flask db upgrade
+
+{% if user.about_me %}<p>{{user.about_me}}</p>{% endif %}
+{% if user.last_seen %}<p><i>Last seen on: {{user.last_seen}}</i></p>{% endif %}
+
+@app.before_request for last_seen
+
+# expalain utcnow
