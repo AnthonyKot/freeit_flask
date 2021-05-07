@@ -230,6 +230,7 @@ flask db upgrade
 >>> User.query.order_by(User.username.desc()).all()
 
 
+
 ## LOGIN
 
 pip install flask-login
@@ -237,3 +238,16 @@ pip install Flask-OpenID
 pip install email_validator
 
 # NB: don't forget UserMixin
+
+
+# LESSON_13
+
+# add Profile Page
+
+@app.route('/user/<nickname>')
+@login_required
+
+| <a href="{{ url_for('user', username = current_user.username) }}">Your Profile</a>
+| <a href="{{ url_for('logout') }}">Logout</a>
+
+posts = Post.query.join(User).filter_by(username = username)
