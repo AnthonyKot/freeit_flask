@@ -3,6 +3,7 @@ from datetime import datetime
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from hashlib import md5
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,6 +21,11 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def avatar(self, size):
+        return 'http://www.gravatar.com/avatar/' + md5(self.email.encode('utf-8')).hexdigest() + '?d=mm&s=' + str(size)
+        # d=mm указывает, что нужно вернуть изображение по умолчанию, когда пользователь не имеет Gravatar аккаунт.
+        # Параметр mm возвращает изображение с серым силуэтом человека.
+        # Параметр s = N указывает до каких размеров следует масштабировать аватарку
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)

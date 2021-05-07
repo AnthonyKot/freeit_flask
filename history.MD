@@ -251,3 +251,21 @@ pip install email_validator
 | <a href="{{ url_for('logout') }}">Logout</a>
 
 posts = Post.query.join(User).filter_by(username = username)
+
+# make user a pretty thing
+
+from hashlib import md5
+# ...
+class User(db.Model):
+    # ...
+    def avatar(self, size):
+        return 'http://www.gravatar.com/avatar/' + md5(self.email).hexdigest() + '?d=mm&s=' + str(size)
+
+<table>
+    <tr valign="top">
+        <td><img src="{{user.avatar(128)}}"></td>
+        <td><h1>User: {{user.nickname}}</h1></td>
+    </tr>
+</table>
+
+{% include 'post.html' %}
