@@ -270,6 +270,8 @@ class User(db.Model):
 
 {% include 'post.html' %}
 
+https://en.gravatar.com/emails/
+
 #commit
 
 role = db.Column(db.SmallInteger, default = 0)
@@ -285,5 +287,13 @@ flask db upgrade
 {% if user.last_seen %}<p><i>Last seen on: {{user.last_seen}}</i></p>{% endif %}
 
 @app.before_request for last_seen
-
 # expalain utcnow
+
+# edit profile form
+
+class EditForm(FlaskForm):
+    nickname = StringField('username', validators = [DataRequired()])
+    about_me = TextAreaField('about_me', validators = [Length(min = 0, max = 140)])
++ edit.html
+
+may someone explain me "def edit():" in routes.py?
